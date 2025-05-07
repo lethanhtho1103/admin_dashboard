@@ -4,10 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import LoginForm from "./login-form";
-import useAuthRedirect from "@/hooks/useAuthRedirect";
+import { useRedirectIfAuthenticated } from "@/contexts/AuthContext";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
-  useAuthRedirect();
+  const [mounted, setMounted] = useState(false);
+
+  // Chuyển hướng nếu người dùng đã đăng nhập
+  useRedirectIfAuthenticated("/hero");
+
+  // Đảm bảo hiển thị UI chỉ khi đã ở client-side
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null; // Hoặc hiển thị loading spinner
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="relative w-[380px]">

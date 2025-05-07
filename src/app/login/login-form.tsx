@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import api from "@/lib/axios";
 import axios from "axios";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Email không hợp lệ" }),
@@ -21,6 +22,7 @@ const formSchema = z.object({
 
 export default function LoginForm() {
   const router = useRouter();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,16 +40,8 @@ export default function LoginForm() {
       const res = await api.post("/api/login", data);
       const { token, user } = res.data;
 
-      // Lưu token và thông tin người dùng vào localStorage
-      localStorage.setItem("token", token);
-
-      // Lưu thêm thông tin người dùng nếu API trả về
-      if (user) {
-        localStorage.setItem("user", JSON.stringify(user));
-      }
-
-      // Thiết lập token cho các request API tiếp theo
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      // Sử dụng AuthContext để lưu token và thông tin đăng nhập
+      login(token, user);
 
       toast.success("Đăng nhập thành công!");
       router.push("/dashboard"); // Đảm bảo chuyển hướng đến trang chính sau khi đăng nhập

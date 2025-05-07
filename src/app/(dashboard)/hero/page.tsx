@@ -1,5 +1,6 @@
 "use client";
 
+import withAuth from "@/hooks/with-auth";
 // import useAuthRedirect from "@/hooks/useAuthRedirect";
 import api from "@/lib/axios";
 import { useEffect, useState } from "react";
@@ -11,11 +12,11 @@ interface SectionItem {
   content: string;
 }
 
-export default function HeroSection() {
+function HeroSection() {
   const [data, setData] = useState<SectionItem[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
-  // useAuthRedirect();
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -84,3 +85,5 @@ export default function HeroSection() {
     </div>
   );
 }
+
+export default withAuth(HeroSection);
