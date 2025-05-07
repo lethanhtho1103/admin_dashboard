@@ -9,23 +9,18 @@ import {
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
+import { Logout } from "@/components/log-out";
+// import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
+  // SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "Acme Inc",
@@ -58,6 +53,26 @@ const data = {
           title: "Hero section",
           url: "/hero",
         },
+        {
+          title: "Stuck",
+          url: "/stuck",
+        },
+        {
+          title: "Solution",
+          url: "/solution",
+        },
+        {
+          title: "Plans",
+          url: "/plans",
+        },
+        {
+          title: "Imagine",
+          url: "/imagine",
+        },
+        {
+          title: "Faqs",
+          url: "/faqs",
+        },
       ],
     },
   ],
@@ -66,14 +81,14 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      {/* <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
-      </SidebarHeader>
+      </SidebarHeader> */}
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <Logout />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

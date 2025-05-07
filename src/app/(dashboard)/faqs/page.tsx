@@ -1,21 +1,21 @@
 "use client";
 
 import withAuth from "@/hooks/with-auth";
-// import useAuthRedirect from "@/hooks/useAuthRedirect";
 import api from "@/lib/axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-interface SectionItem {
+interface FaqItem {
   id: number;
-  section_key: string;
-  content: string;
+  question: string;
+  answer: string;
 }
 
-function HeaderPage() {
-  const [data, setData] = useState<SectionItem[]>([]);
+function Faqs() {
+  const [data, setData] = useState<FaqItem[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [inputValue, setInputValue] = useState<string>("");
+  const [editQuestion, setEditQuestion] = useState<string>("");
+  const [editAnswer, setEditAnswer] = useState<string>("");
 
   useEffect(() => {
     fetchData();
@@ -23,47 +23,54 @@ function HeaderPage() {
 
   const fetchData = async () => {
     try {
-      const res = await api.get("/api/header");
+      const res = await api.get("/api/faqs");
       setData(res.data);
     } catch (err) {
-      console.error("Error fetching hero section:", err);
+      console.error("Error fetching FAQs:", err);
     }
   };
 
-  const handleEdit = (item: SectionItem) => {
+  const handleEdit = (item: FaqItem) => {
     setEditingId(item.id);
-    setInputValue(item.content);
+    setEditQuestion(item.question);
+    setEditAnswer(item.answer);
   };
 
   const handleSave = async (id: number) => {
     try {
-      await api.put(`/api/header/${id}`, {
-        content: inputValue,
+      await api.put(`/api/faqs/${id}`, {
+        question: editQuestion,
+        answer: editAnswer,
       });
       toast.success("Cập nhật thành công!");
       setEditingId(null);
       fetchData();
     } catch (err) {
-      console.error("Error updating content:", err);
+      console.error("Error updating FAQ:", err);
       toast.error("Cập nhật thất bại!");
     }
   };
 
   return (
     <div className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Header</h1>
+      <h1 className="text-2xl font-bold">Câu hỏi thường gặp</h1>
       {data.map((item) => (
         <div
           key={item.id}
           className="border rounded p-4 bg-white shadow flex flex-col gap-2"
         >
-          <span className="text-sm text-gray-500">{item.section_key}</span>
           {editingId === item.id ? (
             <>
+              <input
+                type="text"
+                className="border p-2 rounded w-full"
+                value={editQuestion}
+                onChange={(e) => setEditQuestion(e.target.value)}
+              />
               <textarea
                 className="border p-2 rounded w-full"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                value={editAnswer}
+                onChange={(e) => setEditAnswer(e.target.value)}
               />
               <button
                 onClick={() => handleSave(item.id)}
@@ -75,9 +82,10 @@ function HeaderPage() {
           ) : (
             <div
               onClick={() => handleEdit(item)}
-              className="cursor-pointer whitespace-pre-line"
+              className="cursor-pointer space-y-1"
             >
-              {item.content}
+              <h2 className="font-semibold">{item.question}</h2>
+              <p className="whitespace-pre-line">{item.answer}</p>
             </div>
           )}
         </div>
@@ -86,4 +94,4 @@ function HeaderPage() {
   );
 }
 
-export default withAuth(HeaderPage);
+export default withAuth(Faqs);

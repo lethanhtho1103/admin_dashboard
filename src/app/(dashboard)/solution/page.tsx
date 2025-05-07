@@ -12,7 +12,7 @@ interface SectionItem {
   content: string;
 }
 
-function HeaderPage() {
+function Solution() {
   const [data, setData] = useState<SectionItem[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
@@ -23,7 +23,7 @@ function HeaderPage() {
 
   const fetchData = async () => {
     try {
-      const res = await api.get("/api/header");
+      const res = await api.get("/api/solution");
       setData(res.data);
     } catch (err) {
       console.error("Error fetching hero section:", err);
@@ -37,7 +37,7 @@ function HeaderPage() {
 
   const handleSave = async (id: number) => {
     try {
-      await api.put(`/api/header/${id}`, {
+      await api.put(`/api/solution/${id}`, {
         content: inputValue,
       });
       toast.success("Cập nhật thành công!");
@@ -51,7 +51,7 @@ function HeaderPage() {
 
   return (
     <div className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Header</h1>
+      <h1 className="text-2xl font-bold">Solution</h1>
       {data.map((item) => (
         <div
           key={item.id}
@@ -86,4 +86,4 @@ function HeaderPage() {
   );
 }
 
-export default withAuth(HeaderPage);
+export default withAuth(Solution);
